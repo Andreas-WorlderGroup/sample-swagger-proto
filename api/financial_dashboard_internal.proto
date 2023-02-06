@@ -1,0 +1,42 @@
+syntax = "proto3";
+
+package worlderteam.sample.proto;
+
+import "google/api/annotations.proto";
+
+option go_package = "/pkg";
+
+service FinancialDashboard {
+    // Topup Balance
+    rpc TopupUpdateBalance (TUBRequest) returns (Response) {
+        option (google.api.http) = {
+            post: "/v1/payments/top-up/update-balance"
+            body: "*"
+        };
+    }
+
+    // History Avarage Balance
+    rpc ReloadOverdraftBalance (ROBRequest) returns (Response) {
+        option (google.api.http) = {
+            post: "/v1/payments/reload-overdraft-balance"
+            body: "*"
+        };
+    }
+}
+
+message TUBRequest {
+    int32 clientId = 1 [json_name="client_id"];
+    string refId = 2 [json_name="ref_id"];
+    double amount = 3 [json_name="amount"];
+}
+
+message ROBRequest {
+    double amount = 1 [json_name="amount"];
+    repeated int32 clientIdList = 2;
+}
+
+message Response {
+    int32 status = 1;
+    string message = 2;
+    string data = 3;
+}
